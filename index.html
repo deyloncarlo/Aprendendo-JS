@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html ng-app="listaTelefonica">
+<head>
+	<meta charset="utf-8">
+	<title>Lista Telefônica</title>
+	
+
+	<!-- [IMPORTAÇÕES] -->
+	<script src="../lib/angular-1.6.1/angular.js"></script>
+	<link rel="stylesheet" type="text/css" href="../lib/bootstrap-3.3.7/css/bootstrap.min.css">
+	<!-- [\IMPORTAÇÕES] -->
+
+	<style type="text/css">
+		.top-10 {
+			margin-top: 20px;
+		}	
+	</style>
+
+	<!-- [CÓDIGO ANGULAR] -->
+	<script>
+		angular.module("listaTelefonica", []);
+
+		angular.module("listaTelefonica").controller("listaTelefonicaController", function ($scope) {
+			$scope.appTitle = "Lista Telefônica";
+
+			$scope.contatos = [
+				{nome: 'Deylon Carlo', telefone: '989816392'},
+				{nome: 'Inês de Cássia', telefone: '998199156'},
+				{nome: 'Valdeci Carlos', telefone: '999654482'},
+				{nome: 'Douglas Carlo', telefone: '989854458'},
+			];
+
+			$scope.operadoras = [
+
+				{nome: 'OI', codigo: 14},
+				{nome: 'Vivo', codigo: 15},
+				{nome: 'Tim', codigo: 16},
+				{nome: 'Claro', codigo: 17}
+
+			];
+
+			// Funções 
+			$scope.adicionarContato = function (contato) {
+				var contatoParaAdicionar = angular.copy(contato);
+				$scope.contatos.push(contatoParaAdicionar);
+			};
+		});
+	</script>
+	<!-- [\CÓDIGO ANGULAR] -->
+
+</head>
+<body ng-controller="listaTelefonicaController">
+	<div class="container-fluid">
+		<div class="row">
+			<h3 class="text-center">{{appTitle}}</h3>
+
+			<div class="col-md-6 col-md-offset-3">
+				<table id="tabela-contato" class="table table-striped top-10">
+					<tr>
+						<th>Nome</th>
+						<th>Telefone</th>
+					</tr>
+					<tr ng-repeat="contato in contatos">
+						<td>{{contato.nome}}</td>
+						<td>{{contato.telefone}}</td>
+					</tr>
+				</table>
+
+				<hr>
+				<div class="form-group">
+					<label for="nome">Nome Contato:</label>
+					<input type="text" name="nome" ng-model="contato.nome" class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label for="telefone">Telefone:</label>
+					<input type="text" name="telefone" ng-model="contato.telefone" class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label for="operadoras">Operadora:</label>
+					<select name="operadoras" class="form-control" ng-model="contato.operadora" ng-options="operadora.nome for operadora in operadoras">
+						<option value="">Selecione</option>
+					</select>
+				</div>
+
+				<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone"> Adicionar Contato</button>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>
