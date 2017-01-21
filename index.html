@@ -13,7 +13,22 @@
 	<style type="text/css">
 		.top-10 {
 			margin-top: 20px;
-		}	
+		}
+        
+        .row-table-selected {
+            background-color: lightcoral;
+        }
+        
+        .painel-aplicacao {
+            background-color: #EFEFEF;
+            padding: 20px;
+        }
+        
+        .titulo-aplicacao {
+            color: #AAAAAA;
+            font-weight: bold;
+        }
+        
 	</style>
 
 	<!-- [CÓDIGO ANGULAR] -->
@@ -24,10 +39,10 @@
 			$scope.appTitle = "Lista Telefônica";
 
 			$scope.contatos = [
-				{nome: 'Deylon Carlo', telefone: '989816392'},
-				{nome: 'Inês de Cássia', telefone: '998199156'},
-				{nome: 'Valdeci Carlos', telefone: '999654482'},
-				{nome: 'Douglas Carlo', telefone: '989854458'},
+				{nome: 'Deylon Carlo', telefone: '989816392', operadora: {nome: 'OI', codigo: 14}},
+				{nome: 'Inês de Cássia', telefone: '998199156', operadora: {nome: 'OI', codigo: 14}},
+				{nome: 'Valdeci Carlos', telefone: '999654482', operadora: {nome: 'OI', codigo: 14}},
+				{nome: 'Douglas Carlo', telefone: '989854458', operadora: {nome: 'OI', codigo: 14}}
 			];
 
 			$scope.operadoras = [
@@ -44,6 +59,23 @@
 				var contatoParaAdicionar = angular.copy(contato);
 				$scope.contatos.push(contatoParaAdicionar);
 			};
+            
+            $scope.removerContatos = function (contatos) {
+                $scope.contatos = contatos.filter(function (contato) {
+                      if(!contato.selecionado === true) {
+                          return contato;
+                      }
+                  });            
+            };
+            
+            $scope.isContatoSelecionado = function (contatos) {
+                var isAlgumContatoSelecionado = contatos.some(function (contato) {
+                    return contato.selecionado;
+                });
+                
+                return isAlgumContatoSelecionado;
+            }
+            
 		});
 	</script>
 	<!-- [\CÓDIGO ANGULAR] -->
@@ -52,17 +84,20 @@
 <body ng-controller="listaTelefonicaController">
 	<div class="container-fluid">
 		<div class="row">
-			<h3 class="text-center">{{appTitle}}</h3>
-
-			<div class="col-md-6 col-md-offset-3">
-				<table id="tabela-contato" class="table table-striped top-10">
+			<div class="col-md-6 col-md-offset-3 painel-aplicacao">
+                <h2 class="text-center titulo-aplicacao">{{appTitle}}</h2>
+				<table id="tabela-contato" class="table top-10">
 					<tr>
+                        <th></th>
 						<th>Nome</th>
 						<th>Telefone</th>
+						<th>Operadora</th>
 					</tr>
-					<tr ng-repeat="contato in contatos">
+					<tr ng-class="{'row-table-selected': contato.selecionado}" ng-repeat="contato in contatos">
+                        <td><input type="checkbox" class="form-control" ng-model="contato.selecionado"></td>
 						<td>{{contato.nome}}</td>
 						<td>{{contato.telefone}}</td>
+						<td>{{contato.operadora.nome}}</td>
 					</tr>
 				</table>
 
@@ -84,7 +119,9 @@
 					</select>
 				</div>
 
-				<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone"> Adicionar Contato</button>
+				<button class="btn btn-primary btn-block" ng-click="adicionarContato(contato)" ng-disabled="!contato.nome || !contato.telefone || !contato.operadora"> Adicionar Contato</button>
+                
+                <button class="btn btn-danger btn-block" ng-click="removerContatos(contatos)" ng-disabled="!isContatoSelecionado(contatos)"> Remover Contatos</button>
 
 			</div>
 		</div>
